@@ -18,7 +18,13 @@ class ChatAPI(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request: Request):
-        token = request.query_params.get("token")
+        token = request.query_params.get("token", "")
+        if token == "":
+            new_chat = Chat.objects.create()
+            url = reverse("chat_api", args=[new_chat.id]) + "?token=" + str(new_chat.token)
+            return Response(data={'chat': ChatSerializer(new_chat).data,
+                                  'url': url}, status=status.HTTP_201_CREATED)
+
         if is_valid_uuid(token):
             chat = get_object_or_404(Chat, token=token)
             if str(chat.token) == token:
@@ -27,16 +33,6 @@ class ChatAPI(APIView):
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-class ChatCreateAPI(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request):
-        new_chat = Chat.objects.create()
-        url = reverse("chat_api", args=[new_chat.id]) + "?token=" + str(new_chat.token)
-        return Response(data={'chat': ChatSerializer(new_chat).data,
-                              'url': url}, status=status.HTTP_201_CREATED)
 
 
 class ImageAPI(APIView):
