@@ -17,10 +17,10 @@ class ChatAPI(APIView):
     """
     permission_classes = [AllowAny]
 
-    def get(self, request: Request, pk):
+    def get(self, request: Request):
         token = request.query_params.get("token")
         if is_valid_uuid(token):
-            chat = get_object_or_404(Chat, id=int(pk))
+            chat = get_object_or_404(Chat, token=token)
             if str(chat.token) == token:
                 return Response(data=ChatSerializer(chat).data, status=status.HTTP_200_OK)
             else:

@@ -11,7 +11,7 @@ class Chat(models.Model):
 
 
 def get_image_path(instance, filename):
-    return "chat_images/%d-%s" % (instance.id, filename)
+    return "chat_images/%d-%s" % (instance.chat.id, filename)
 
 
 class Image(models.Model):

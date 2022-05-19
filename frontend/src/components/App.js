@@ -5,16 +5,16 @@ class App extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            data: {},
-            loaded: false,
+            data: null,
             placeholder: "Loading",
             image: null,
-            url: null
+            url: null,
+            auth: false
         };
     }
 
     componentDidMount() {
-        fetch("api/chat/1/?token=5550fa0d-d9a3-4303-94d4-d3a9b3825852")
+        fetch("api/chat/" + window.location.search)
             .then(response => {
                 if (response.status > 400) {
                     return this.setState(() => {
@@ -27,7 +27,7 @@ class App extends Component{
                 this.setState(() => {
                     return {
                         data,
-                        loaded: true
+                        auth: true
                     };
                 });
             });
@@ -70,6 +70,14 @@ class App extends Component{
         }
     }
 
+    showMessages(){
+        if (this.state.data){
+            return (
+                <img src={"" + this.state.data.images[0].image} alt="error"/>
+            )
+        }
+    }
+
 
     render() {
         return (
@@ -78,21 +86,19 @@ class App extends Component{
                     <div id="upload">
                         <label>
                             Upload your sticker:
-                            <input type="file" onChange={this.changeFile}/>
                         </label>
-                        <p><button onClick={this.uploadFile}>Upload!</button></p>
+                        <p><input type="file" onChange={this.changeFile}/><button onClick={this.uploadFile}>Upload!</button></p>
                     </div>
                     <div id="new_chat">
                     <label>
                         Create new chat:
                     </label>
                         <p><button onClick={this.createChat}>Create</button></p>
-                        <p id="url"></p>
+                        <p id="url">{this.showUrl()}</p>
                     </div>
                 </div>
                 <div id="chat">
-                    <label>Your sticker chat: </label>
-
+                {this.showMessages()}
                 </div>
             </div>
         );
