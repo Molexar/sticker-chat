@@ -6,7 +6,7 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 
-from .models import Chat
+from .models import Chat, Image
 from .serializers import ChatSerializer
 from .utils import is_valid_uuid
 
@@ -39,6 +39,10 @@ class ImageAPI(APIView):
     def post(self, request):
         try:
             image = request.data['image']
+            chat_token = request.data["token"]
+            caption = request.data["caption"]
+            chat = get_object_or_404(Chat, token=chat_token)
+            Image.objects.create(chat=chat, image=image, caption=caption)
         except KeyError:
             return Response(status=status.HTTP_204_NO_CONTENT)
 
