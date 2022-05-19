@@ -55,7 +55,9 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = [
+    'localhost:8000',
+]
 CORS_ALLOW_METHODS = list(default_methods) + [
 
 ]
