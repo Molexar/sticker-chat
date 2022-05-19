@@ -43,6 +43,7 @@ class ImageAPI(APIView):
             caption = request.data["caption"]
             chat = get_object_or_404(Chat, token=chat_token)
             Image.objects.create(chat=chat, image=image, caption=caption)
+            return Response(status=status.HTTP_200_OK)
         except KeyError:
             return Response(status=status.HTTP_204_NO_CONTENT)
 
